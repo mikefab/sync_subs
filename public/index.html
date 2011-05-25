@@ -6,6 +6,12 @@
 
 <script>
 
+function begin(){
+	add_master(document.getElementById('master_pad').value);
+	add_second(document.getElementById('second_pad').value);
+
+}
+
 function add_master(master) {
 
   var a_master = master.split("\n\n");
@@ -200,9 +206,9 @@ function add_second(second) {
   <script type="text/javascript" src="javascripts/dom-drag.js"> </script>
      </head>
   <body>
-<div id="sign"></div>
-<div id="left" style="float:left;">
-<textarea id ="master_pad" name="master_pad"  style="height:100px;width:500px;" onBlur="add_master(this.value);" onClick="">
+
+<div id="left" style="position:relative;display:inline; top:0px;float:left;">
+<textarea id ="master_pad" name="master_pad"  style="height:100px;width:500px;" onBlur="//add_master(this.value);">
 	1
 	00:01:02,041 --> 00:01:06,790
 	Promise that you're not going to fuck
@@ -5781,11 +5787,13 @@ function add_second(second) {
 
 </textarea>	
 <div id="master_subs" ></div>
-
 </div>
 
-<div id="right" style="float:right">
-	<textarea id ="second_pad" name="second_pad"  style="height:100px;width:500px;" onBlur="add_second(this.value);" onClick="">
+<div id="middle" style="position:relative;display:inline;top:0px;left:90px;">
+<button id="begin" onClick="begin();">Click me!</button>
+</div>
+<div id="right" style="position:relative;display:inline;top:0px;float:right">
+	<textarea id ="second_pad" name="second_pad"  style="height:100px;width:500px;" onBlur="//add_second(this.value);">
 		0
 		00:00:01,000 --> 00:00:04,000
 		Downloaded From www.AllSubs.org
