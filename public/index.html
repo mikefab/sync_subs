@@ -9,7 +9,7 @@
 function add_master(master) {
 
   var a_master = master.split("\n\n");
-  for(i = 0; i < a_master.length; i++){
+  for(i = 0; i < a_master.length-1; i++){
 	var a_temp = a_master[i].split("\n");
 	var num = a_temp[0];
 	var a_times = a_temp[1].split(" --> ");
@@ -26,14 +26,10 @@ function add_master(master) {
 
 
     var space_master = document.createElement('div');
-    var space_name = i+'space_master';
-    space_master.setAttribute('id',space_name);
     space_master.setAttribute('style',"display:inline;");
     space_master.innerHTML = "&nbsp;&nbsp;"; 
 
     var arrow_master = document.createElement('div');
-    var arrow_name = i+'arrow_master';
-    arrow_master.setAttribute('id',arrow_name);
     arrow_master.setAttribute('style',"display:inline;");
     arrow_master.innerHTML = " --> "; 
 
@@ -51,19 +47,16 @@ function add_master(master) {
 
     span = a_temp.length - 2;
 
-
     var text = a_temp.slice(2,span+2);
     text = text.join("<br\/>");
     var text_master = document.createElement('div');
-    var text_name = 'text'+i+'Master';
+    var text_name = i+'text_master';
     text_master.setAttribute('id',text_name);
     text_master.setAttribute('contentEditable',true);
     text_master.innerHTML = text;
 
-
-
     var container_master = document.createElement('div');
-    container_master.setAttribute("style","position:relative;border-style: solid;border-width:2px;border-color:black;padding:20px 10px 10px 0px;height:" + ((span+2)*14) +"px;");
+    container_master.setAttribute("style","position:relative;border-style: solid;border-width:2px;border-color:black;padding:20px 10px 10px 0px;height:80px;");
     var container_name= i+'master';
     container_master.setAttribute('id',container_name);
     container_master.setAttribute('contentEditable',true);
@@ -73,114 +66,134 @@ function add_master(master) {
     container_master.appendChild(arrow_master);
     container_master.appendChild(stop_master);
 
-    container_master.appendChild(text_master);
-    ni.appendChild(container_master);
-	Drag.init(container_master,null,0,0,-40,0);
-	container_master.setAttribute("onDblClick","remove_div(this,'master_subs');");
-    container_master.onDragEnd = function(x, y) {
+     container_master.appendChild(text_master);
+     ni.appendChild(container_master);
+	 Drag.init(container_master,null,0,0,-40,0);
+	  container_master.setAttribute("onDblClick","remove_div(this,'master');//renumber('master',this.id);");
+      container_master.onDragEnd = function(x, y) {
 	  var n = document.getElementById(this.id).id.match(/[0-9.]+/);
 
 	  if(y>20){//Shouldn't need to allow downward migration
 	//	document.getElementById('text'+n+'Master').innerHTML;
-	  }
+ 	  }
 	  if(y<-20){
-		document.getElementById('text'+(n-1)+'Master').innerHTML=document.getElementById('text'+(n-1)+'Master').innerHTML + " "  + document.getElementById('text'+n+'Master').innerHTML;
-		document.getElementById((n-1)+'stop_master').innerHTML=document.getElementById(n+'stop_master').innerHTML;
-		document.getElementById((n-1)+'master').style.height="80px";
-		document.getElementById((n-1)+'trans').style.height="80px";
-	    remove_div(this,'master_subs');
-
-	  }
-    }
-
-  }
-}
-
-
-function add_second(second) {
-
-  var a_second = second.split("\n\n");
-    for(i = 0; i < a_second.length; i++){
-	  var a_temp = a_second[i].split("\n");
-	  var num = a_temp[0];
-	  var a_times = a_temp[1].split(" --> ");
-	  var start =a_times[0];
-	  var stop =a_times[1];
-	  var ni = document.getElementById('subs2');
-	
-      //numi.value = num;
-      var num_div = document.createElement('div');
-      var num_name = i+'num';
-      num_div.setAttribute('id',num_name);
-      num_div.setAttribute('style',"display:inline;");
-      num_div.innerHTML = num 
-      num_div.innerHTML = i
-
-      var space_div = document.createElement('div');
-      var space_name = i+'space';
-      space_div.setAttribute('id',space_name);
-      space_div.setAttribute('style',"display:inline;");
-      space_div.innerHTML = "&nbsp;&nbsp;"; 
-
-      var arrow_div = document.createElement('div');
-      var arrow_name = i+'arrow';
-      arrow_div.setAttribute('id',arrow_name);
-      arrow_div.setAttribute('style',"display:inline;");
-      arrow_div.innerHTML = " --> "; 
-
-      var start_div = document.createElement('div');
-      var start_name = i+'start';
-      start_div.setAttribute('id',start_name);
-      start_div.setAttribute('style',"display:inline;");
-      start_div.innerHTML = start; 
-
-      var stop_div = document.createElement('div');
-      var stop_name = i+'start';
-      stop_div.setAttribute('id',stop_div);
-      stop_div.setAttribute('style',"display:inline;");
-
-      stop_div.innerHTML = stop; 
-
-
-      span = a_temp.length - 2;
-      var text = a_temp.slice(2,span+2);
-      text = text.join("<br\/>");
-      var text_div = document.createElement('div');
-      var text_name = 'text'+i+'Div';
-      text_div.setAttribute('id',text_name);
-      text_div.setAttribute('contentEditable',true);
-      text_div.innerHTML = text+"<br/><br/>";
-
-      var container_div = document.createElement('div');
-      container_div.setAttribute("style","position:relative;border-style: solid;border-width:2px;border-color:black;padding:20px 10px 10px 0px;height:" + ((span+2)*14) +"px;");
-      var container_name= i+'trans';
-      container_div.setAttribute('id',container_name);
-      container_div.setAttribute('contentEditable',true);
-      container_div.appendChild(num_div);
-      container_div.appendChild(space_div);
-      container_div.appendChild(start_div);
-      container_div.appendChild(arrow_div);
-      container_div.appendChild(stop_div);
-
-      container_div.appendChild(text_div);
-
-      ni.appendChild(container_div);
-      Drag.init(container_div,null,0,0,-40,0);
-	container_div.setAttribute("onDblClick","remove_div(this,'subs2');");
-      container_div.onDragEnd = function(x, y) {
-	  if(y>20){
-		alert(document.getElementById(this.id).innerHTML);
-	  }
-	  if(y<-20){
-		alert("merge up" + this.id);
-	  }
+	    document.getElementById((n-1)+'text_master').innerHTML=document.getElementById((n-1)+'text_master').innerHTML + " "  + document.getElementById(n+'text_master').innerHTML;
+	    document.getElementById((n-1)+'stop_master').innerHTML=document.getElementById(n+'stop_master').innerHTML;
+//	    document.getElementById((n-1)+'master').style.height="80px";
+//	    document.getElementById((n-1)+'second').style.height="80px";
+	    remove_div(this,'master');
+ 	  }
     }
   }
 }
 
 function remove_div(div,source){
-	 document.getElementById(source).removeChild(div);	
+	 renumber(source,div.id);
+	 document.getElementById(source+"_subs").removeChild(div);	
+
 }
+
+
+function renumber(source, div_index){
+
+	var n = parseInt(div_index.match(/[0-9.]+/));
+	child_divs = document.getElementById(source+"_subs").childNodes;
+	for(var i = n; i < child_divs.length-1; i++){
+	  //You just destroyed div # n so start at the following number 
+	  var n = n+1;
+
+	  document.getElementById(n+"num_"+source).innerHTML=(n-1);		
+
+	  document.getElementById(n+source).id =(n-1) +source;
+	  document.getElementById(n+"num_" + source).id =(n-1) +"num_"   + source;
+	  document.getElementById(n+"text_" + source).id =(n-1) +"text_" + source;
+	  document.getElementById(n+"start_"+ source).id=(n-1) +"start_" + source;
+	  document.getElementById(n+"stop_" + source).id =(n-1) +"stop_" + source;	
+	}
+}
+
+function add_second(second) {
+
+  var a_second = second.split("\n\n");
+    for(i = 0; i < a_second.length-1; i++){
+	  var a_temp = a_second[i].split("\n");
+	  var num = a_temp[0];
+	  var a_times = a_temp[1].split(" --> ");
+	  var start =a_times[0];
+	  var stop =a_times[1];
+	  var ni = document.getElementById('second_subs');
+	
+      //numi.value = num;
+      var num_second = document.createElement('div');
+      var num_name = i+'num_second';
+      num_second.setAttribute('id',num_name);
+      num_second.setAttribute('style',"display:inline;");
+      num_second.innerHTML = num 
+      num_second.innerHTML = i
+
+      var space_second = document.createElement('div');
+      space_second.setAttribute('style',"display:inline;");
+      space_second.innerHTML = "&nbsp;&nbsp;"; 
+
+      var arrow_second = document.createElement('div');
+      arrow_second.setAttribute('style',"display:inline;");
+      arrow_second.innerHTML = " --> "; 
+
+      var start_second = document.createElement('div');
+      var start_name = i+'start_second';
+      start_second.setAttribute('id',start_name);
+      start_second.setAttribute('style',"display:inline;");
+      start_second.innerHTML = start; 
+
+      var stop_second = document.createElement('div');
+      var stop_name = i+'stop_second';
+      stop_second.setAttribute('id',stop_name);
+      stop_second.setAttribute('style',"display:inline;");
+
+      stop_second.innerHTML = stop; 
+
+      span = a_temp.length - 2;
+      var text = a_temp.slice(2,span+2);
+      text = text.join("<br\/>");
+      var text_second = document.createElement('div');
+      var text_name = i+'text_second';
+      text_second.setAttribute('id',text_name);
+      text_second.setAttribute('contentEditable',true);
+      text_second.innerHTML = text+"";
+
+      var container_second = document.createElement('div');
+      container_second.setAttribute("style","position:relative;border-style: solid;border-width:2px;border-color:black;padding:20px 10px 10px 0px;height:80px;");
+      var container_name= i+'second';
+      container_second.setAttribute('id',container_name);
+      container_second.setAttribute('contentEditable',true);
+      container_second.appendChild(num_second);
+      container_second.appendChild(space_second);
+      container_second.appendChild(start_second);
+      container_second.appendChild(arrow_second);
+      container_second.appendChild(stop_second);
+
+      container_second.appendChild(text_second);
+
+      ni.appendChild(container_second);
+      Drag.init(container_second,null,0,0,-40,0);
+	  container_second.setAttribute("onDblClick","remove_div(this,'second');");
+      container_second.onDragEnd = function(x, y) {
+      var n = document.getElementById(this.id).id.match(/[0-9.]+/);
+
+	  if(y>20){
+
+	  }
+	  if(y<-20){
+		document.getElementById((n-1)+'text_second').innerHTML=document.getElementById((n-1)+'text_second').innerHTML + " "  + document.getElementById(n+'text_second').innerHTML;
+		document.getElementById((n-1)+'stop_second').innerHTML=document.getElementById(n+'stop_second').innerHTML;
+//		document.getElementById((n-1)+'master').style.height="80px";
+//		document.getElementById((n-1)+'second').style.height="80px";
+	    remove_div(this,'second');
+	  }
+    }
+  }
+}
+
 
 
 </script>
@@ -1132,7 +1145,7 @@ function remove_div(div,source){
 	por menos de 2 Mts.
 
 	196
-	00:11:19,740 --> 00:11:23,020
+	00:11:19,740 --> 00:19,020
 	-¡No mames, güey, mínimo 10, cabrón!
 	-Puta, 4 a lo mucho.
 
@@ -7188,7 +7201,7 @@ function remove_div(div,source){
 </div>
 
 <div id="right" style="float:right">
-	<textarea id ="pad2" name="pad2"  style="height:100px;width:500px;" onBlur="add_second(this.value);" onClick="">
+	<textarea id ="second_pad" name="second_pad"  style="height:100px;width:500px;" onBlur="add_second(this.value);" onClick="">
 		1
 		00:01:02,041 --> 00:01:06,790
 		Promise that you're not going to fuck
@@ -7215,9 +7228,6 @@ function remove_div(div,source){
 		00:01:17,083 --> 00:01:22,498
 		How about a dirty Mexican
 		selling bracelets in the French Riviera?
-		three
-		four
-		five
 
 		7
 		00:01:22,624 --> 00:01:23,707
@@ -12769,7 +12779,7 @@ function remove_div(div,source){
 
 		
 	</textarea>	
-	<div id="subs2" ></div>
+	<div id="second_subs" ></div>
 </div>
 	
 
