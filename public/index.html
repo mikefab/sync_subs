@@ -21,7 +21,9 @@ function add_master(master) {
     var num_name = i+'num_master';   
  	num_master.setAttribute('id',num_name);
     num_master.setAttribute('style',"display:inline;");
-    num_master.innerHTML =  num;
+//    num_master.innerHTML =  num;
+    num_master.innerHTML =  i;
+
 
     var space_master = document.createElement('div');
     var space_name = i+'space_master';
@@ -74,7 +76,7 @@ function add_master(master) {
     container_master.appendChild(text_master);
     ni.appendChild(container_master);
 	Drag.init(container_master,null,0,0,-40,0);
-	container_master.setAttribute("onDblClick","remove_div(this);");
+	container_master.setAttribute("onDblClick","remove_div(this,'master_subs');");
     container_master.onDragEnd = function(x, y) {
 	  var n = document.getElementById(this.id).id.match(/[0-9.]+/);
 
@@ -85,7 +87,8 @@ function add_master(master) {
 		document.getElementById('text'+(n-1)+'Master').innerHTML=document.getElementById('text'+(n-1)+'Master').innerHTML + " "  + document.getElementById('text'+n+'Master').innerHTML;
 		document.getElementById((n-1)+'stop_master').innerHTML=document.getElementById(n+'stop_master').innerHTML;
 		document.getElementById((n-1)+'master').style.height="80px";
-	    remove_div(this);
+		document.getElementById((n-1)+'trans').style.height="80px";
+	    remove_div(this,'master_subs');
 
 	  }
     }
@@ -111,6 +114,7 @@ function add_second(second) {
       num_div.setAttribute('id',num_name);
       num_div.setAttribute('style',"display:inline;");
       num_div.innerHTML = num 
+      num_div.innerHTML = i
 
       var space_div = document.createElement('div');
       var space_name = i+'space';
@@ -162,7 +166,7 @@ function add_second(second) {
 
       ni.appendChild(container_div);
       Drag.init(container_div,null,0,0,-40,0);
-      container_div.setAttribute("onDblClick","alert('hate');");
+	container_div.setAttribute("onDblClick","remove_div(this,'subs2');");
       container_div.onDragEnd = function(x, y) {
 	  if(y>20){
 		alert(document.getElementById(this.id).innerHTML);
@@ -174,8 +178,8 @@ function add_second(second) {
   }
 }
 
-function remove_div(div){
-	 document.getElementById('master_subs').removeChild(div);	
+function remove_div(div,source){
+	 document.getElementById(source).removeChild(div);	
 }
 
 
