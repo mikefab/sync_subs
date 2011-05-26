@@ -44,6 +44,7 @@ function add_master(master) {
     start_master.setAttribute('id',start_name);
     start_master.setAttribute('style',"display:inline;");
     start_master.innerHTML = start;
+	start_master.setAttribute('onclick','play_from(this.innerHTML);');
 
     var stop_master = document.createElement('div');
     var stop_name = i+'stop_master';
@@ -69,6 +70,7 @@ function add_master(master) {
     container_master.appendChild(num_master);
     container_master.appendChild(space_master);
     container_master.appendChild(start_master);
+
     container_master.appendChild(arrow_master);
     container_master.appendChild(stop_master);
 
@@ -260,13 +262,32 @@ function add_second(second) {
     }
   }
 }
+function play_from(start){
+	time = start.split(/:/);
+	
+	new_start = (time[0]*3600)+(time[1]*60)+parseInt(time[2]);
+//alert(start + " " + time[0]+ " " + time[1]+ " " + time[2] + " ++ " + new_start+ " ---  " + document.getElementById('player').currentTime);
+	
+	document.getElementById('player').currentTime=new_start;
+	document.getElementById('player').play();
+}
 
-
+function handleFiles(files){ 
+        var file = window.webkitURL.createObjectURL(files[0]); 
+        document.getElementById('player').src = file; 
+}
 
 </script>
   <script type="text/javascript" src="javascripts/dom-drag.js"> </script>
      </head>
   <body>
+<!-- <input id="files-upload" type="file" multiple> -->
+
+<audio id='player' controls ></audio> 
+<input type='file' id='selectedFile' 
+onchange='handleFiles(this.files)' />
+
+
 
 <div id="left" style="position:relative;display:inline; top:0px;float:left;">
 <textarea id ="master_pad" name="master_pad"  style="height:100px;width:500px;" onBlur="//add_master(this.value);">
