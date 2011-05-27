@@ -1,0 +1,1418 @@
+<!DOCTYPE html>
+<html>
+  <head>
+		<script src="javascripts/jquery.min.js" type="text/javascript"></script> 
+		<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/jquery-ui.min.js" type="text/javascript"></script> 
+		<script src="http://jquery-ui.googlecode.com/svn/tags/latest/external/jquery.bgiframe-2.1.2.js" type="text/javascript"></script> 
+		<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/i18n/jquery-ui-i18n.min.js" type="text/javascript"></script> 
+
+
+<script>
+  function begin(){
+    add_master(document.getElementById('master_pad').value);
+    add_second(document.getElementById('second_pad').value);
+  }
+function add_master(master) {
+
+  var a_master = master.split("\n\n");
+  for(i = 0; i < a_master.length-1; i++){
+	var a_temp = a_master[i].split("\n");
+	var num = a_temp[0];
+	var a_times = a_temp[1].split(" --> ");
+	var start =a_times[0];
+	var stop =a_times[1];
+    var ni = document.getElementById('master_subs');
+
+    var num_master = document.createElement('div');
+    var num_name = i+'num_master';   
+ 	num_master.setAttribute('id',num_name);
+    num_master.setAttribute('style',"display:inline;");
+//    num_master.innerHTML =  num;
+    num_master.innerHTML =  i;
+
+
+    var space_master = document.createElement('div');
+    space_master.setAttribute('style',"display:inline;");
+    space_master.innerHTML = "&nbsp;&nbsp;"; 
+
+    var arrow_master = document.createElement('div');
+    arrow_master.setAttribute('style',"display:inline;");
+    arrow_master.innerHTML = " --> "; 
+
+    var start_master = document.createElement('div');
+    var start_name = i+'start_master';
+    start_master.setAttribute('id',start_name);
+    start_master.setAttribute('style',"display:inline;");
+    start_master.innerHTML = start;
+
+    var stop_master = document.createElement('div');
+    var stop_name = i+'stop_master';
+    stop_master.setAttribute('id',stop_name);
+    stop_master.setAttribute('style',"display:inline;");
+    stop_master.innerHTML = stop;
+
+    span = a_temp.length - 2;
+
+    var text = a_temp.slice(2,span+2);
+    text = text.join("<br\/>");
+    var text_master = document.createElement('div');
+    var text_name = i+'text_master';
+    text_master.setAttribute('id',text_name);
+    text_master.setAttribute('contentEditable',true);
+    text_master.innerHTML = text;
+
+    var container_master = document.createElement('div');
+    container_master.setAttribute("style","position:relative;border-style: solid;border-width:2px;border-color:black;padding:20px 10px 10px 0px;height:80px;");
+    var container_name= i+'master';
+    container_master.setAttribute('id',container_name);
+    container_master.appendChild(num_master);
+    container_master.appendChild(space_master);
+    container_master.appendChild(start_master);
+    container_master.appendChild(arrow_master);
+    container_master.appendChild(stop_master);
+	text_master.setAttribute('contentEditable',true);
+     container_master.appendChild(text_master);
+     ni.appendChild(container_master);
+//	 Drag.init(container_master,null,0,0,-40,0);
+  $('#'+i+'master').draggable();
+//	  container_master.setAttribute("onDblClick","reposition(this);//renumber('master',this.id);");
+	  container_master.setAttribute("onDblClick","$('#'+this.id).draggable('disable');");
+	  container_master.setAttribute("onBlur","$('#'+this.id).draggable('enable');");
+
+
+      container_master.onDragEnd = function(x, y) {
+	  var n = document.getElementById(this.id).id.match(/[0-9.]+/);
+
+	  if(y>20){//Shouldn't need to allow downward migration
+	//	document.getElementById('text'+n+'Master').innerHTML;
+ 	  }
+	  if(y<-20){
+	    document.getElementById((n-1)+'text_master').innerHTML=document.getElementById((n-1)+'text_master').innerHTML + " "  + document.getElementById(n+'text_master').innerHTML;
+	    document.getElementById((n-1)+'stop_master').innerHTML=document.getElementById(n+'stop_master').innerHTML;
+//	    document.getElementById((n-1)+'master').style.height="80px";
+//	    document.getElementById((n-1)+'second').style.height="80px";
+	    remove_div(this,'master');
+ 	  }
+    }
+  }
+}
+
+function remove_div(div,source){
+	 renumber(source,div.id);
+	 document.getElementById(source+"_subs").removeChild(div);	
+
+}
+
+
+function renumber(source, div_index){
+
+	var n = parseInt(div_index.match(/[0-9.]+/));
+	child_divs = document.getElementById(source+"_subs").childNodes;
+	for(var i = n; i < child_divs.length-1; i++){
+	  //You just destroyed div # n so start at the following number 
+	  var n = n+1;
+
+	  document.getElementById(n+"num_"+source).innerHTML=(n-1);		
+
+	  document.getElementById(n+source).id =(n-1) +source;
+	  document.getElementById(n+"num_" + source).id =(n-1) +"num_"   + source;
+	  document.getElementById(n+"text_" + source).id =(n-1) +"text_" + source;
+	  document.getElementById(n+"start_"+ source).id=(n-1) +"start_" + source;
+	  document.getElementById(n+"stop_" + source).id =(n-1) +"stop_" + source;	
+	}
+}
+
+function add_second(second) {
+
+  var a_second = second.split("\n\n");
+    for(i = 0; i < a_second.length-1; i++){
+	  var a_temp = a_second[i].split("\n");
+	  var num = a_temp[0];
+	  var a_times = a_temp[1].split(" --> ");
+	  var start =a_times[0];
+	  var stop =a_times[1];
+	  var ni = document.getElementById('second_subs');
+	
+      //numi.value = num;
+      var num_second = document.createElement('div');
+      var num_name = i+'num_second';
+      num_second.setAttribute('id',num_name);
+      num_second.setAttribute('style',"display:inline;");
+      num_second.innerHTML = num 
+      num_second.innerHTML = i
+
+      var space_second = document.createElement('div');
+      space_second.setAttribute('style',"display:inline;");
+      space_second.innerHTML = "&nbsp;&nbsp;"; 
+
+      var arrow_second = document.createElement('div');
+      arrow_second.setAttribute('style',"display:inline;");
+      arrow_second.innerHTML = " --> "; 
+
+      var start_second = document.createElement('div');
+      var start_name = i+'start_second';
+      start_second.setAttribute('id',start_name);
+      start_second.setAttribute('style',"display:inline;");
+      start_second.innerHTML = start; 
+
+      var stop_second = document.createElement('div');
+      var stop_name = i+'stop_second';
+      stop_second.setAttribute('id',stop_name);
+      stop_second.setAttribute('style',"display:inline;");
+
+      stop_second.innerHTML = stop; 
+
+      span = a_temp.length - 2;
+      var text = a_temp.slice(2,span+2);
+      text = text.join("<br\/>");
+      var text_second = document.createElement('div');
+      var text_name = i+'text_second';
+      text_second.setAttribute('id',text_name);
+      text_second.setAttribute('contentEditable',true);
+      text_second.innerHTML = text+"";
+
+      var container_second = document.createElement('div');
+      container_second.setAttribute("style","position:relative;border-style: solid;border-width:2px;border-color:black;padding:20px 10px 10px 0px;height:80px;");
+      var container_name= i+'second';
+      container_second.setAttribute('id',container_name);
+      container_second.appendChild(num_second);
+      container_second.appendChild(space_second);
+      container_second.appendChild(start_second);
+      container_second.appendChild(arrow_second);
+      container_second.appendChild(stop_second);
+
+      container_second.appendChild(text_second);
+
+      ni.appendChild(container_second);
+    //  Drag.init(container_second,null,0,0,-40,0);
+	  container_second.setAttribute("onDblClick","remove_div(this,'second');");
+      container_second.onDragEnd = function(x, y) {
+      var n = document.getElementById(this.id).id.match(/[0-9.]+/);
+
+	  if(y>20){
+
+	  }
+	  if(y<-20){
+		document.getElementById((n-1)+'text_second').innerHTML=document.getElementById((n-1)+'text_second').innerHTML + " "  + document.getElementById(n+'text_second').innerHTML;
+		document.getElementById((n-1)+'stop_second').innerHTML=document.getElementById(n+'stop_second').innerHTML;
+//		document.getElementById((n-1)+'master').style.height="80px";
+//		document.getElementById((n-1)+'second').style.height="80px";
+	    remove_div(this,'second');
+	  }
+    }
+  }
+}
+
+
+
+</script>
+     </head>
+  <body >
+<div id="left" style="position:relative;display:inline; top:0px;float:left;">
+
+
+<textarea id ="master_pad" name="master_pad"  style="position:relative;height:100px;width:500px;" onBlur="//add_master(this.value);">
+	1
+	00:01:02,041 --> 00:01:06,790
+	Promise that you're not going to fuck
+	any Italians, babe.
+
+	2
+	00:01:06,916 --> 00:01:08,332
+	Why are you saying that?
+
+	3
+	00:01:09,374 --> 00:01:12,582
+	- Or some gringo backpacker?
+	- No, it's disgusting!
+
+	4
+	00:01:13,374 --> 00:01:15,373
+	Maybe a French homo?
+
+	5
+	00:01:15,583 --> 00:01:16,957
+	No!
+
+	6
+	00:01:17,083 --> 00:01:22,498
+	How about a dirty Mexican
+	selling bracelets in the French Riviera?
+
+	7
+	00:01:22,624 --> 00:01:23,707
+	Tenoch!
+
+	8
+	00:01:23,833 --> 00:01:27,123
+	- With nobody.
+	- Of course not.
+
+	9
+	00:01:28,791 --> 00:01:31,165
+	- Promise me.
+	- I promise.
+
+	10
+	00:01:31,291 --> 00:01:33,040
+	- What?
+	- Come on, you know!
+
+	11
+	00:01:33,166 --> 00:01:34,623
+	Know what?
+
+	12
+	00:01:37,374 --> 00:01:38,665
+	I promise...
+
+	13
+	00:01:38,791 --> 00:01:41,332
+	that I won't even sleep...
+
+	14
+	00:01:41,458 --> 00:01:42,540
+	with a Chinese.
+
+	15
+	00:01:42,666 --> 00:01:45,498
+	- I'm not joking!
+	- Don't you trust me, Tenoch?
+
+	16
+	00:01:45,624 --> 00:01:48,582
+	- Yes.
+	- So what?
+
+	17
+	00:01:50,541 --> 00:01:54,332
+	- Well, promise.
+	- And you?
+
+	18
+	00:01:54,458 --> 00:01:56,082
+	I promise, too.
+
+	19
+	00:01:56,208 --> 00:01:57,665
+	Let's hear it.
+
+	20
+	00:01:57,791 --> 00:02:00,457
+	- But we'll do it together.
+	- Together.
+
+	21
+	00:02:02,374 --> 00:02:06,582
+	One... two... three.
+
+	22
+	00:02:07,749 --> 00:02:10,623
+	I promise that I...
+
+	23
+	00:02:10,749 --> 00:02:13,415
+	won't fuck...
+
+	24
+	00:02:14,166 --> 00:02:17,498
+	- any Brazilian.
+	- Any German.
+
+	25
+	00:02:17,624 --> 00:02:19,123
+	- Argentinean.
+	- Polish.
+
+	26
+	00:02:19,249 --> 00:02:20,582
+	- Venezuelans.
+	- Irish.
+
+	27
+	00:02:20,708 --> 00:02:22,707
+	- Or from Guasave.
+	- Your father.
+
+	28
+	00:02:23,458 --> 00:02:25,290
+	Are you mad?
+
+	29
+	00:02:37,291 --> 00:02:40,332
+	Ana's mother, a divorced
+	French woman, a teacher...
+
+	30
+	00:02:40,458 --> 00:02:42,290
+	at the Foreigners Institute...
+
+	31
+	00:02:42,416 --> 00:02:45,457
+	didn't object about Tenoch
+	sleeping with her daughter.
+
+	32
+	00:02:47,249 --> 00:02:48,998
+	It was different for Julio.
+
+	33
+	00:02:49,124 --> 00:02:51,082
+	He could stay with Cecilia
+	only until dinner...
+
+	34
+	00:02:51,208 --> 00:02:55,582
+	and had to come back in the morning
+	for the trip to the airport.
+
+	35
+	00:02:57,583 --> 00:03:02,082
+	Although he didn't show it, Cecilia's father,
+	a paediatrician specialising in allergies...
+
+	36
+	00:03:02,208 --> 00:03:06,498
+	thought his daughter's relationship
+	with Julio had gone too far.
+
+	37
+	00:03:08,249 --> 00:03:11,832
+	Her mother, a Lacanian psychologist,
+	saw it differently.
+
+	38
+	00:03:11,958 --> 00:03:14,332
+	She believed their relationship
+	was innocent.
+
+	39
+	00:03:14,458 --> 00:03:18,498
+	- She can't find her passport!
+	- Then she's going to miss the plane!
+
+	40
+	00:03:18,624 --> 00:03:22,165
+	Julio!
+	Help me look for the passport!
+
+	41
+	00:03:22,291 --> 00:03:25,582
+	- Quick, we're in a hurry!
+	- Yes, yes.
+
+	42
+	00:03:28,666 --> 00:03:30,665
+	Did you take the car out?
+
+	43
+	00:03:31,374 --> 00:03:33,582
+	- Shut the door!
+	- And the passport?
+
+	44
+	00:03:33,708 --> 00:03:35,498
+	It's here, stupid.
+
+	45
+	00:03:35,624 --> 00:03:36,498
+	Come on, babe!
+
+	46
+	00:03:37,124 --> 00:03:39,207
+	Hurry.
+
+	47
+	00:03:51,083 --> 00:03:52,748
+	- What a nice goodbye.
+	- Oh, yeah!
+
+	48
+	00:03:56,458 --> 00:03:59,540
+	What are you going out tonight?
+
+	49
+	00:03:59,666 --> 00:04:02,457
+	No, I'll be missing you too much, babe.
+
+	50
+	00:04:02,583 --> 00:04:05,457
+	I know I'm going to miss you an awful lot.
+
+	51
+	00:04:06,124 --> 00:04:08,498
+	- Come on!
+	- Cecilia!
+
+	52
+	00:04:08,624 --> 00:04:10,665
+	- Your mother!
+	- Come, come!
+
+	53
+	00:04:10,791 --> 00:04:13,623
+	I want to take a bit of you inside me.
+
+	54
+	00:04:14,708 --> 00:04:16,998
+	The plane won't wait for you, darling!
+
+	55
+	00:04:17,124 --> 00:04:18,957
+	Move! Move!
+
+	56
+	00:04:24,124 --> 00:04:25,373
+	Did you find your passport?
+
+	57
+	00:04:25,499 --> 00:04:27,873
+	- Here it is!
+	- Good.
+
+	58
+	00:04:30,291 --> 00:04:33,582
+	Hello! How are you?
+
+	59
+	00:04:33,708 --> 00:04:36,957
+	- Have you seen Esteban?
+	- No, I haven't.
+
+	60
+	00:04:38,458 --> 00:04:40,040
+	Ana, let's do the check-in!
+
+	61
+	00:04:45,708 --> 00:04:47,290
+	What's up, charolastra?
+
+	62
+	00:04:47,416 --> 00:04:52,332
+	- I hate this farewell bullshit?
+	- Why don't they just go.
+
+	63
+	00:04:52,458 --> 00:04:55,457
+	I'm going to miss her,
+	but this is too much. Bye bye.
+
+	64
+	00:04:55,583 --> 00:04:58,665
+	- Hi, guys.
+	- Hey, how's it going?
+
+	65
+	00:04:58,791 --> 00:05:00,332
+	Why are you so pale?
+
+	66
+	00:05:00,458 --> 00:05:01,665
+	Never mind.
+
+	67
+	00:05:03,249 --> 00:05:05,707
+	- Princess.
+	- Hi, dad! How are you?
+
+	68
+	00:05:08,041 --> 00:05:11,623
+	Ana's father was a journalist
+	who had recently become a politician.
+
+	69
+	00:05:12,541 --> 00:05:18,248
+	He was the Director of Logistics at the
+	Department of Culture in Mexico City.
+
+	70
+	00:05:18,374 --> 00:05:22,748
+	Although he had a liking for Tenoch,
+	he referred to him as the "Preppie"
+
+	71
+	00:05:22,874 --> 00:05:27,123
+	in front of his colleagues,
+	but never in front of Ana.
+
+	72
+	00:05:27,249 --> 00:05:30,457
+	- Let's go.
+	- I wish I was already there.
+
+	73
+	00:05:30,583 --> 00:05:34,332
+	- Don't go.
+	- I'll miss you so much.
+
+	74
+	00:05:34,458 --> 00:05:36,957
+	- I don't want to leave, sweetie.
+	- Ana!
+
+	75
+	00:05:46,958 --> 00:05:48,040
+	Smell of bread.
+
+	76
+	00:05:50,333 --> 00:05:53,498
+	You pig!
+	Get the hell off!
+
+	77
+	00:05:53,624 --> 00:05:57,165
+	A graduation gift.
+
+	78
+	00:05:57,291 --> 00:06:00,332
+	You should have failed!
+
+	79
+	00:06:00,458 --> 00:06:03,123
+	Stop it.
+	Don't be a baby.
+
+	80
+	00:06:04,041 --> 00:06:07,623
+	- Did your old man get pissed off?
+	- He lost it.
+
+	81
+	00:06:07,749 --> 00:06:12,040
+	If I don't take Economics,
+	I can forget the car.
+
+	82
+	00:06:12,166 --> 00:06:14,665
+	You'd give up our car...
+
+	83
+	00:06:14,791 --> 00:06:19,498
+	- because of a fucking course?
+	- I hate economists!
+
+	84
+	00:06:19,624 --> 00:06:23,165
+	They can all go and fuck themselves.
+
+	85
+	00:06:23,291 --> 00:06:25,332
+	- You're an idiot.
+	- No way.
+
+	86
+	00:06:25,458 --> 00:06:29,123
+	I want to be a writer.
+	Switch to Literature with me, man.
+
+	87
+	00:06:29,249 --> 00:06:31,165
+	No way.
+
+	88
+	00:06:35,208 --> 00:06:40,665
+	Fucking traffic! I bet my sister's
+	in another demonstration.
+
+	89
+	00:06:40,791 --> 00:06:43,040
+	It's their right, charolastra.
+
+	90
+	00:06:43,166 --> 00:06:47,498
+	And it's my right to tell them
+	to fuck off.
+
+	91
+	00:06:47,624 --> 00:06:49,290
+	I suppose so.
+
+	92
+	00:06:49,416 --> 00:06:55,332
+	- But left-wing chicks are hot, mate.
+	- Totally.
+
+	93
+	00:06:56,416 --> 00:06:58,540
+	Are you wearing perfume?
+
+	94
+	00:07:02,124 --> 00:07:05,457
+	Holy shit!
+	You fucking pig!
+
+	95
+	00:07:05,583 --> 00:07:06,415
+	Open it!
+
+	96
+	00:07:06,541 --> 00:07:08,540
+	- Open it!
+	- It's locked.
+
+	97
+	00:07:08,666 --> 00:07:10,540
+	Open it, arsehole!
+
+	98
+	00:07:11,791 --> 00:07:15,623
+	On that day, three demonstrations
+	took place across the city.
+
+	99
+	00:07:16,499 --> 00:07:20,832
+	But the traffic jam was caused
+	by a pedestrian.
+
+	100
+	00:07:21,624 --> 00:07:24,790
+	Marcelino Escutia,
+	a bricklayer from Michoacan.
+
+	101
+	00:07:26,166 --> 00:07:30,165
+	Marcelino was hit by a speeding bus.
+
+	102
+	00:07:31,333 --> 00:07:33,207
+	He never used the pedestrian bridge...
+
+	103
+	00:07:33,333 --> 00:07:38,623
+	because its poor location forced him to walk
+	three extra miles to his work site.
+
+	104
+	00:07:39,749 --> 00:07:42,540
+	His unidentified body
+	was collected by the Red Cross...
+
+	105
+	00:07:42,666 --> 00:07:45,040
+	and taken to the city morgue.
+
+	106
+	00:07:46,124 --> 00:07:48,290
+	It took four days for the corpse
+	to be claimed.
+
+	107
+	00:07:54,041 --> 00:07:56,498
+	Tenoch Iturbide was the second
+	of three children...
+
+	108
+	00:07:56,624 --> 00:08:01,248
+	born to a Harvard trained economist,
+	Secretary of State...
+
+	109
+	00:08:01,374 --> 00:08:06,165
+	and a housewife who attended
+	various spiritual seminars.
+
+	110
+	00:08:07,333 --> 00:08:11,248
+	His parents considered
+	naming him Hernán...
+
+	111
+	00:08:11,374 --> 00:08:14,332
+	but he was born the year his father
+	joined the ruling party...
+
+	112
+	00:08:14,458 --> 00:08:16,790
+	and affected by a sudden nationalism...
+
+	113
+	00:08:17,041 --> 00:08:19,290
+	he opted to give his son
+	an Aztec name: Tenoch.
+
+	114
+	00:08:20,291 --> 00:08:23,207
+	Once we're stoned, we'll drop a little E.
+
+	115
+	00:08:23,333 --> 00:08:26,165
+	I've brought some stuff from
+	San Francisco. Good stuff!
+
+	116
+	00:08:26,291 --> 00:08:27,540
+	Really?
+
+	117
+	00:08:27,666 --> 00:08:30,290
+	Total organic shit!
+
+	118
+	00:08:33,374 --> 00:08:37,373
+	If Miriam comes,
+	I'll slip it into her sweet little thing...
+
+	119
+	00:08:39,041 --> 00:08:40,790
+	- What a babe!
+	- Yeah!
+</textarea>	
+<div id="master_subs" ></div>
+</div>
+
+<div id="middle" style="position:relative;display:inline;top:0px;left:90px;">
+<button id="begin" onClick="begin();">Click me!</button>
+</div>
+<div id="right" style="position:relative;display:inline;top:0px;float:right">
+	<textarea id ="second_pad" name="second_pad"  style="height:100px;width:500px;" onBlur="//add_second(this.value);">
+		0
+		00:00:01,000 --> 00:00:04,000
+		Downloaded From www.AllSubs.org
+
+		1
+		00:00:44,320 --> 00:00:45,300
+		Prométeme...
+
+		2
+		00:00:45,940 --> 00:00:48,120
+		...que no le vas a poner
+		con ningún italiano, cosa.
+
+		3
+		00:00:49,060 --> 00:00:50,700
+		¡Hombre, cómo crees!
+
+		4
+		00:00:51,340 --> 00:00:53,420
+		Ni con ningún pinche
+		gringo mochilero.
+
+		5
+		00:00:53,660 --> 00:00:54,800
+		¡No, guácala!
+
+		6
+		00:00:55,340 --> 00:00:58,120
+		-Menos con un francesito, puto.
+		-¡Qué no!
+
+		7
+		00:00:58,760 --> 00:01:00,660
+		Ni con un mexicanito
+		huarachudo...
+
+		8
+		00:01:01,300 --> 00:01:04,080
+		...de esos que venden alcohol
+		en la Costa Azul.
+
+		9
+		00:01:04,220 --> 00:01:06,020
+		-¡Ay Tenoch!
+		-Con nadie.
+
+		10
+		00:01:06,760 --> 00:01:08,680
+		¡Claro que
+		con nadie, Teno!
+
+		11
+		00:01:10,040 --> 00:01:12,020
+		-¡Prométemelo!
+		-Te lo prometo.
+
+		12
+		00:01:12,360 --> 00:01:14,160
+		-¿Qué?
+		-¡Ya sabes!
+
+		13
+		00:01:14,400 --> 00:01:15,860
+		-¿Ya sé qué?
+		-¡Ay!
+
+		14
+		00:01:18,280 --> 00:01:22,160
+		Te prometo... que no...
+		me voy...  a coger...
+
+		15
+		00:01:22,320 --> 00:01:24,500
+		-... a ningún chino.
+		-Oye no manches.
+
+		16
+		00:01:25,140 --> 00:01:26,620
+		¿Qué no confías
+		en mí, Tenoch?
+
+		17
+		00:01:27,680 --> 00:01:29,700
+		-Sí.
+		-¿Entonces?
+
+		18
+		00:01:31,820 --> 00:01:34,460
+		-Pues, prométemelo.
+		-¿Y tú?
+
+		19
+		00:01:34,900 --> 00:01:37,240
+		-Yo también te lo prometo.
+		-A ver.
+
+		20
+		00:01:38,840 --> 00:01:40,960
+		-Pero los dos juntos.
+		-Juntos.
+
+		21
+		00:01:42,180 --> 00:01:43,100
+		Una...
+
+		22
+		00:01:44,200 --> 00:01:45,640
+		... dos...
+
+		23
+		00:01:45,680 --> 00:01:47,040
+		... tres.
+
+		24
+		00:01:47,680 --> 00:01:49,100
+		Te prometo...
+
+		25
+		00:01:49,580 --> 00:01:50,600
+		... que no...
+
+		26
+		00:01:50,840 --> 00:01:53,140
+		me voy... a coger...
+
+		27
+		00:01:54,980 --> 00:01:56,560
+		a... ninguna brasileña
+
+		28
+		00:01:56,640 --> 00:01:57,280
+		-Alemán
+
+		29
+		00:01:57,281 --> 00:01:58,401
+		-Ni Argentina.
+		-Polaco.
+
+		30
+		00:01:58,402 --> 00:02:00,122
+		-Ni de Sonora.
+		-Irlandés.
+
+		31
+		00:02:00,200 --> 00:02:02,040
+		- ¿Y de Guasave?
+		- A tu padre.
+
+		32
+		00:02:02,480 --> 00:02:04,960
+		Oye, ¿qué te pasa?
+
+		33
+		00:02:15,880 --> 00:02:18,420
+		La madre de Ana,
+		una francesa divorciada...
+
+		34
+		00:02:18,460 --> 00:02:20,700
+		...maestra del centro
+		de estudios para extranjeros...
+
+		35
+		00:02:21,140 --> 00:02:23,680
+		...no objetaba que Tenoch se
+		quedara a dormir con su hija.
+
+		36
+		00:02:25,380 --> 00:02:27,060
+		Con Julio era distinto...
+
+		37
+		00:02:27,300 --> 00:02:30,035
+		...estuvo con Cecilia sólo hasta
+		la cena, y tuvo que regresar...
+
+		38
+		00:02:30,040 --> 00:02:32,275
+		...en la mañana, para acompañar
+		a la familia a llevarla al...
+
+		39
+		00:02:32,280 --> 00:02:33,760
+		...aeropuerto.
+
+		40
+		00:02:35,680 --> 00:02:37,660
+		Aunque nunca lo externara,
+		el padre de Cecilia...
+
+		41
+		00:02:37,700 --> 00:02:39,740
+		...un pediatra especialista
+		en alergias...
+
+		42
+		00:02:39,980 --> 00:02:42,080
+		...temía que la relación
+		de su hija con Julio...
+
+		43
+		00:02:42,140 --> 00:02:44,620
+		...llegará demasiado
+		lejos.
+
+		44
+		00:02:45,280 --> 00:02:47,980
+		En cambio la madre, una
+		psicóloga lacaniana, veía...
+
+		45
+		00:02:47,990 --> 00:02:50,870
+		...con agrado el noviazgo,
+		al que calificaba de inocente.
+
+		46
+		00:02:51,540 --> 00:02:53,940
+		Es un caso, no encuentra
+		el pasaporte.
+
+		47
+		00:02:53,980 --> 00:02:57,440
+		-¡Ay la va a dejar el avión!
+		-Julio, sube tantito porfa...
+
+		48
+		00:02:57,480 --> 00:03:00,900
+		-... ayúdame a buscar el pasaporte.
+		-Apúrale mijito que tenemos prisa.
+
+		49
+		00:03:00,990 --> 00:03:03,470
+		¡Sí!
+
+		50
+		00:03:05,240 --> 00:03:06,960
+		¿Y tú ya sacaste
+		el coche?
+
+		51
+		00:03:07,820 --> 00:03:09,900
+		-¡Rápido, cierra la puerta!
+		-¿Y tu pasaporte?
+
+		52
+		00:03:09,940 --> 00:03:10,820
+		¡Aquí está menso!
+
+		53
+		00:03:13,580 --> 00:03:16,100
+		¡Ven! ¡Apúrate bicho!
+
+		54
+		00:03:26,560 --> 00:03:28,080
+		¡Qué rica despedida!
+
+		55
+		00:03:30,560 --> 00:03:31,480
+		¿Oye...
+
+		56
+		00:03:32,120 --> 00:03:33,500
+		...vas a salir hoy...?
+
+		57
+		00:03:33,840 --> 00:03:35,020
+		¿Vas a salir hoy
+		de reven?
+
+		58
+		00:03:35,160 --> 00:03:37,640
+		¡No creo bicha, hoy me
+		voy a tirar al suelo...
+
+		59
+		00:03:38,080 --> 00:03:40,560
+		además te voy a estar
+		extrañando un chingo, cabrón!
+
+		60
+		00:03:41,200 --> 00:03:43,900
+		-¡Vámos!
+		-Ya tenemos que irnos, hija.
+
+		61
+		00:03:43,901 --> 00:03:45,441
+		-Ahí está tu mamá. Tu mamá
+		-Vente, vente...
+
+		62
+		00:03:45,520 --> 00:03:47,540
+		...quiero llevarme un
+		poquito de ti conmigo.
+
+		63
+		00:03:49,400 --> 00:03:52,700
+		-Te va dejar el avión, Ceci.
+		-Muévete, muévete.
+
+		64
+		00:03:58,240 --> 00:04:00,720
+		-¿Encontraste el pasaporte?
+		-¡Aquí está!
+
+		65
+		00:04:00,960 --> 00:04:02,040
+		¡Qué bueno!
+
+		66
+		00:04:04,560 --> 00:04:05,480
+		-¡Hola!
+		-¡Hola!
+
+		67
+		00:04:05,920 --> 00:04:06,800
+		Hola.
+		¡Hola cómo estás!
+
+		68
+		00:04:07,040 --> 00:04:08,560
+		-¡Elia!
+		-¿No has visto a Esteban?
+
+		69
+		00:04:08,600 --> 00:04:11,080
+		No, no
+		lo he visto.
+
+		70
+		00:04:12,800 --> 00:04:14,720
+		¡Vamos a checarte!
+
+		71
+		00:04:15,980 --> 00:04:17,400
+		¡Hola!
+
+		72
+		00:04:19,360 --> 00:04:20,280
+		¿Qué pachó charolastra?
+
+		73
+		00:04:20,380 --> 00:04:22,260
+		-Oye, ¿qué pedo?
+		-Ah no, que joda...
+
+		74
+		00:04:22,300 --> 00:04:24,880
+		-... tanto pinche desmadrito ya.
+		-Me da hueva que se vayan, cabrón.
+
+		75
+		00:04:25,020 --> 00:04:26,900
+		- ¡Qué güeba!
+		-Pero si la voy a extrañar y todo...
+
+		76
+		00:04:27,040 --> 00:04:28,780
+		...pero ya, güeba,
+		¿no cabrón? Ciao.
+
+		77
+		00:04:28,820 --> 00:04:31,700
+		- ¿Qué pasó chavos?
+		- ¿Suegrito cómo estás?
+
+		78
+		00:04:31,940 --> 00:04:34,340
+		-¿Por qué están tan pálidos, eh?
+		-¡Qué pasó!
+
+		79
+		00:04:36,140 --> 00:04:38,980
+		-¡Preciosa!
+		-¡Ay papi, qué bueno...!
+
+		80
+		00:04:40,480 --> 00:04:42,560
+		El padre de Ana, era un
+		periodista convertido...
+
+		81
+		00:04:42,570 --> 00:04:44,310
+		...recientemente
+		a la política.
+
+		82
+		00:04:44,980 --> 00:04:46,920
+		Trabajaba en el gobierno
+		de la Ciudad de México...
+
+		83
+		00:04:47,010 --> 00:04:49,590
+		...como director de logística
+		de su Instituto de Cultura.
+
+		84
+		00:04:50,580 --> 00:04:53,380
+		Aunque Tenoch le simpatizaba,
+		con frecuencia ante...
+
+		85
+		00:04:53,400 --> 00:04:56,280
+		...sus compañeros de partido,
+		pero nunca frente a su hija...
+
+		86
+		00:04:56,840 --> 00:04:59,060
+		...se refería a él
+		como "El Junior".
+
+		87
+		00:04:59,561 --> 00:05:01,961
+		- Ay, ya quiero estar en el avión.
+		- Yo ya quiero estar allá.
+
+		88
+		00:05:02,060 --> 00:05:05,100
+		-Linda no quiero que te vayas, eh.
+		-Amor, te voy a extrañar.
+
+		89
+		00:05:05,440 --> 00:05:07,320
+		-No me quiero ir bicho.
+		-Ana.
+
+		90
+		00:05:08,360 --> 00:05:09,340
+		Ceci.
+
+		91
+		00:05:17,920 --> 00:05:19,140
+		Huele a pan.
+
+		92
+		00:05:21,260 --> 00:05:24,340
+		No mames, pinche cerdo, cabrón,
+		no mames, vete a la verga.
+
+		93
+		00:05:24,880 --> 00:05:28,040
+		Eso pasa por haber
+		pasado de año, no mames.
+
+		94
+		00:05:28,180 --> 00:05:31,020
+		Vete a la verga, cabrón. Mejor
+		te hubieras ido a extraordinario.
+
+		95
+		00:05:31,860 --> 00:05:33,700
+		-Ya, ya no seas chillón.
+		-No manches.
+
+		96
+		00:05:34,240 --> 00:05:36,020
+		Oye güey, ¿pues qué pasó con
+		tu jefe, se encabronó?
+
+		97
+		00:05:36,560 --> 00:05:38,700
+		No, no se encabronó,
+		se súper enputó...
+
+		98
+		00:05:38,740 --> 00:05:40,040
+		dice que si no hago
+		área 3, me puedo...
+
+		99
+		00:05:40,050 --> 00:05:41,890
+		...ir olvidando
+		de la nave, cabrón.
+
+		100
+		00:05:42,180 --> 00:05:44,360
+		No mames, y te vas a quedar
+		sin el netísimo murciégalo.
+
+		101
+		00:05:44,800 --> 00:05:46,940
+		Todo por no querer hacer área 3
+		charolastra, no mames.
+
+		102
+		00:05:47,180 --> 00:05:50,320
+		Me cagan los economistas, cabrón.
+		Por mí todos esos ojetes...
+
+		103
+		00:05:50,340 --> 00:05:52,420
+		...se pueden ir a chingar
+		a su pinche madre.
+
+		104
+		00:05:52,480 --> 00:05:54,800
+		-¡Qué pendejo!
+		-Ni madres güey...
+
+		105
+		00:05:54,940 --> 00:05:56,420
+		...yo quiero ser escritor,
+		cabrón.
+
+		106
+		00:05:56,760 --> 00:05:58,600
+		Mejor métete conmigo
+		al área 5, güey.
+
+		107
+		00:05:58,740 --> 00:06:00,870
+		Nel, paso, güey no mames.
+
+		108
+		00:06:04,100 --> 00:06:06,780
+		Puta madre, pinche tráfico,
+		carajo, seguro ahí anda la necia...
+
+		109
+		00:06:06,781 --> 00:06:08,561
+		...y la boinas armando otro
+		desmadre, en otra puta...
+
+		110
+		00:06:08,565 --> 00:06:11,525
+		-... manifestación, güey.
+		-Están en todo su derecho, charolastra.
+
+		111
+		00:06:11,940 --> 00:06:14,380
+		¡A huevo! Yo estoy en mi
+		derecho de mentarles la madre...
+
+		112
+		00:06:14,385 --> 00:06:17,125
+		-... por pasados de verga, cabrón.
+		-Eso sí.
+
+		113
+		00:06:17,900 --> 00:06:20,161
+		Bueno, lo que sí, es que luego
+		en las pinches manifestaciones...
+
+		114
+		00:06:20,162 --> 00:06:22,042
+		...sí hay rebuenos
+		culitos, ¿no güey?
+
+		115
+		00:06:22,240 --> 00:06:24,080
+		Eso que ni qué.
+
+		116
+		00:06:24,620 --> 00:06:26,420
+		¿Oye te pusiste loción, cabrón?
+
+		117
+		00:06:30,280 --> 00:06:33,020
+		Puta madre, pinche cerdo,
+		cabrón, no mames.
+
+		118
+		00:06:33,060 --> 00:06:34,600
+		Oye, ábrele.
+
+		119
+		00:06:34,740 --> 00:06:37,580
+		-Es el seguro para niños, puto.
+		-Güey, ábrele, cabrón.
+
+		120
+		00:06:39,480 --> 00:06:41,680
+		Ese mismo día hubo tres
+		manifestaciones...
+
+		121
+		00:06:41,681 --> 00:06:43,521
+		...en distintos lugares
+		de la ciudad.
+
+		122
+		00:06:43,820 --> 00:06:45,960
+		Sin embargo, el embotellamiento
+		que los detenía...
+
+		123
+		00:06:46,300 --> 00:06:48,280
+		...había sido provocado
+		por un peatón atropellado.
+
+		124
+		00:06:48,920 --> 00:06:51,800
+		Marcelino Escutia, un albañil
+		inmigrado de Michoacán.
+
+		125
+		00:06:53,040 --> 00:06:55,540
+		Marcelino fue alcanzado por
+		un pecero que conducía...
+
+		126
+		00:06:55,580 --> 00:06:57,160
+		...con exceso de velocidad.
+
+		127
+		00:06:58,220 --> 00:07:00,060
+		Nunca usó el puente
+		peatonal más cercano...
+
+		128
+		00:07:00,070 --> 00:07:03,150
+		...porque su mala ubicación,
+		lo hacía caminar 2 Kms. más...
+
+		129
+		00:07:03,170 --> 00:07:05,010
+		...a la construcción donde
+		trabajaba.
+
+		130
+		00:07:06,400 --> 00:07:08,580
+		Su cuerpo fue recogido
+		por la Cruz Verde, y llevado...
+
+		131
+		00:07:08,620 --> 00:07:10,960
+		...sin identificación
+		al Servicio Médico Forense.
+
+		132
+		00:07:12,500 --> 00:07:14,800
+		Tardó 4 días
+		en ser reclamado.
+
+		133
+		00:07:19,840 --> 00:07:22,340
+		Tenoch Iturbide era
+		el segundo de tres hijos...
+
+		134
+		00:07:22,380 --> 00:07:24,860
+		...de un matrimonio formado
+		por un economista doctorado...
+	</textarea>	
+	<div id="second_subs" ></div>
+</div>
+	
+
+
+  </body>
+</html>
+
