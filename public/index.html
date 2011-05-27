@@ -36,12 +36,6 @@ function add_master(master) {
     space_master.setAttribute('style',"position:relative;float:right;display:inline;");
     space_master.innerHTML = "&nbsp;&nbsp;"; 
 
-    var start_master = document.createElement('div');
-    var start_name = i+'start_master';
-    start_master.setAttribute('id',start_name);
-    start_master.setAttribute('style',"position:relative;float:right;display:inline;");
-    start_master.innerHTML = start;
-	start_master.setAttribute('onclick','play_from(this.innerHTML);');
 
 
     var arrow_master = document.createElement('div');
@@ -55,6 +49,15 @@ function add_master(master) {
     stop_master.setAttribute('style',"position:relative;float:right;display:inline;");
 	stop_master.setAttribute('onclick',"document.getElementById('player').pause();");
     stop_master.innerHTML = stop;
+
+    var start_master = document.createElement('div');
+    var start_name = i+'start_master';
+    start_master.setAttribute('id',start_name);
+    start_master.setAttribute('style',"position:relative;float:right;display:inline;");
+    start_master.innerHTML = start;
+	start_master.setAttribute('onclick',"play_from(this.innerHTML,document.getElementById('"+i+"stop_master').innerHTML);");
+
+
 
     span = a_temp.length - 2;
 
@@ -88,7 +91,7 @@ container_master.appendChild(stop_master);
     container_master.appendChild(start_master);    
 	container_master.appendChild(br_master);
 
-
+ 
      container_master.appendChild(text_master);
      ni.appendChild(container_master);
 	 Drag.init(container_master,null,0,0,-40,0);
@@ -330,7 +333,7 @@ function add_second(second) {
     }
   }
 }
-function play_from(start){
+function play_from(start,stop){
 	time = start.split(/:/);
 	time[2]=time[2].replace(/,/,".");
 	time[2]=time[2].replace(/^0/,"");
@@ -338,6 +341,15 @@ function play_from(start){
 	time[1]=time[1].replace(/^0/,"");
 	new_start = (time[0]*3600)+(time[1]*60)+parseInt(time[2]);
 
+	time = stop.split(/:/);
+	time[2]=time[2].replace(/,/,".");
+	time[2]=time[2].replace(/^0/,"");
+	time[0]=time[0].replace(/^0/,"");
+	time[1]=time[1].replace(/^0/,"");
+	new_stop = (time[0]*3600)+(time[1]*60)+parseInt(time[2]);
+
+time_diff=new_stop-new_start;
+setTimeout("document.getElementById('player').pause();",((time_diff+1)*1000));
 //alert(start + " " + time[0]+ " " + time[1]+ " " + time[2] + " ++ " + new_start+ " ---  " + document.getElementById('player').currentTime);
 	
 	document.getElementById('player').currentTime=new_start;
